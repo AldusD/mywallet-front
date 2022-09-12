@@ -1,9 +1,13 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import {styled, createGlobalStyle} from 'styled-components';
+import { useState } from 'react';
 
 import './assets/fonts.css';
+import UserContext from "./contexts/UserContext";
 import LoginPage from "./components/LoginPage";
 import SignupPage from './components/SignupPage';
+import Home from './components/Home';
+import TransferPage from './components/TransferPage';
 
 const GlobalStyle = createGlobalStyle`
     body {
@@ -13,15 +17,24 @@ const GlobalStyle = createGlobalStyle`
 `
 
 const App = () => {
+
+    const API = 'http://localhost:5000';
+    let transfers = new Array;
+    const [operation, setOperation] = useState('');
+
     return (
         <>
-            <GlobalStyle />
-            <BrowserRouter>
-                <Routes>
-                    <Route path='/' element={ <LoginPage /> } />
-                    <Route path='/signup' element={ <SignupPage /> } />
-                </Routes>
-            </BrowserRouter>
+            <UserContext.Provider value={ { API, transfers, operation, setOperation } }>
+                <GlobalStyle />
+                <BrowserRouter>
+                    <Routes>
+                        <Route path='/' element={ <LoginPage /> } />
+                        <Route path='/signup' element={ <SignupPage /> } />
+                        <Route path='/home' element={ <Home /> } />
+                        <Route path="/newTransfer" element={ <TransferPage />} />
+                    </Routes>
+                </BrowserRouter>
+            </UserContext.Provider>
         </>
     )
 }

@@ -1,7 +1,9 @@
-import { useState } from "react";
-import { Link } from 'react-router-dom';
+import { useState, useContext } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import Styled from "styled-components";
+import axios from "axios";
 
+import UserContext from '../contexts/UserContext';
 import Form from "./Form";
 import logo from '../assets/logo.png';
 
@@ -15,10 +17,21 @@ const SignupPage = () => {
         });
     
         // Logic
+        const { API } = useContext(UserContext); 
+        const navigate = useNavigate();
+
         const updateForm = e => setForm({ ...form, [e.target.name]: e.target.value});
-        const signup = click => {
+        
+        const signup = async click => {
             click.preventDefault();
-            console.log(form)
+            
+            try {
+                const signup = await axios.post(`${API}/signup`,form);
+                console.log(signup.data)
+                navigate('/');
+            } catch (error) {
+                console.error(error);
+            }
         }
         // UI
     return (
