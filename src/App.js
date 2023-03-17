@@ -31,7 +31,8 @@ const App = () => {
                         <Route path='/' element={ <LoginPage /> } />
                         <Route path='/signup' element={ <SignupPage /> } />
                         <Route path='/home' element={ <Home /> } />
-                        <Route path="/newTransfer" element={ <TransferPage />} />
+                        <Route path="/newTransfer" element={ <TransferPage transferOperation='create' />} />
+                        <Route path="/changeTransfer/:transferId/:type" element={ <TransferPage transferOperation='change' />} />
                     </Routes>
                 </BrowserRouter>
             </UserContext.Provider>

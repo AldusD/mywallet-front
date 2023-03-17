@@ -11,6 +11,7 @@ const Home = () => {
     const [transfers, setTransfers] = useState([]);
     const [balance, setBalance] = useState(0);
     const [status, setStatus] = useState('#03AC00');
+    const [refresh, setRefresh] = useState(false);
     // Logic
     const {API, setOperation } = useContext(UserContext);
     const navigate = useNavigate();
@@ -28,7 +29,32 @@ const Home = () => {
         }
         setBalance(sum);
         (sum >= 0) ? setStatus('#03AC00') : setStatus('#C70000');
-        console.log(sum, balance)
+    }
+
+    const deleteTransaction = async transactionId => {
+        const confirmation = window.confirm('This will delete this transaction, are you sure?')
+        if(!confirmation) return;
+        
+        const headers = { Authorization: `Bearer ${ localStorage.getItem("token") }` };
+        const data = { transferId: transactionId };
+        try {
+            const transferDelete = await axios.delete(`${API}/transfer/${localStorage.getItem('id')}`, { headers, data });
+            setRefresh(!refresh);
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+    
+    const logout = async click => {
+        const headers = { Authorization: `Bearer ${ localStorage.getItem("token") }` };
+                
+        try {
+            const logout = await axios.post(`${API}/logout/${localStorage.getItem("id")}`, {}, { headers });
+        } catch (error) {
+            alert(error.message);
+            return;
+        }
+        return navigate("/");
     }
 
     useEffect(async () => {
@@ -38,7 +64,6 @@ const Home = () => {
 
         try {
             const getTransfers = await axios.get(`${API}/transfer/${ localStorage.getItem('id') }`, { headers }); 
-            console.log(getTransfers.data.transfers)       
             setTransfers([...getTransfers.data.transfers]);
             calculateBalance([...getTransfers.data.transfers])
         } catch (error) {
@@ -46,7 +71,7 @@ const Home = () => {
         }
         
         
-    }, [])
+    }, [refresh])
 
     // UI
     return (
@@ -54,7 +79,7 @@ const Home = () => {
 
         <Header>
             <h2>Welcome back, { localStorage.getItem("name") }</h2>
-            <Link to='/' ><button>Go back</button></Link>
+            <ion-icon onClick={logout} name="exit"></ion-icon>
         </Header>
         
         { (transfers.length == 0) ? 
@@ -69,9 +94,12 @@ const Home = () => {
                         <Transfer key={i}>
                             <div>
                                 <Date>{t.date}</Date>
-                                <span>{t.description}</span>
+                                <Link to={`/changeTransfer/${t._id}/${t.type}`} ><span>{t.description}</span></Link>
                             </div>
-                            <Value color={color} >{t.value}</Value>
+                            <div>
+                                <Value color={color} >{t.value}</Value>
+                                <DeleteIcon onClick={() => deleteTransaction(t._id)} >x</DeleteIcon>
+                            </div>
                         </Transfer>
                     )
                 }
@@ -83,8 +111,14 @@ const Home = () => {
         }
 
         <Footer>
-            <div onClick={() => newTransfer('Cash In') } ><p>New cash in</p></div>
-            <div onClick={() => newTransfer('Cash Out') } ><p>New cash out</p></div>
+            <div onClick={() => newTransfer('Cash In') } >
+                <p>New cash in</p> 
+                <ion-icon name="add-circle-outline"></ion-icon>
+            </div>
+            <div onClick={() => newTransfer('Cash Out') } >
+                <p>New cash out</p>
+                <ion-icon name="remove-circle-outline"></ion-icon>    
+            </div>
         </Footer>
         
         </SHome>
@@ -95,8 +129,9 @@ const Balance = Styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 0 0.4rem;
     margin-bottom: 1rem;
-    font-size: 1.3rem;
+    font-size: 1rem;
 
     .bold {
         font-weight: bold;
@@ -115,6 +150,7 @@ const Value = Styled.span`
 const Date = Styled.span`
     color: grey;
     margin-right: 0.4rem;
+    font-size: 1rem;
 `;
 
 const Transfer = Styled.div`
@@ -123,10 +159,14 @@ const Transfer = Styled.div`
     justify-content: space-between;
     padding: 0.3rem 0.3rem 0 0.3rem;
 
+    a {
+        text-decoration: none;
+        color: black;
+    }
 
     span {
         font-family: 'Raleway';
-        font-size: 1.3rem;
+        font-size: 1rem;
     }
 `
 
@@ -144,19 +184,31 @@ const Footer = Styled.div`
 
     div {
         display: flex;
-        align-items: top;
-        height: 13rem;
-        width: 11rem;
+        flex-direction: column;
+        align-items: left;
+        justify-content: space-between;
+        height: 20vh;
+        width: 100%; 
         border-radius: 20px;
-        margin-bottom: 6%;
-
+        margin: 0 0.2rem 6% 0.2rem;
         background-color: #A328D6;
+
+
+        ion-icon {
+            margin: 3vh 0.2rem 0 0.2rem;
+            font-size: 1.6rem;
+            color: white;
+            margin-left: 0.4rem;
+            margin-bottom: 0.6vh;
+        }
+        
 
         p {
             font-family: "Raleway";
             font-size: 1.2rem;
             font-weight: 700;
             color: white;
+            margin-left: 0.4rem;
         }
     }
 `
@@ -168,7 +220,7 @@ const Box = Styled.div`
     align-items: center;
     background-color: white;
     width: 90%;
-    min-height: 30rem;
+    min-height: 56vh;
     border-radius: 20px;
 
 p {
@@ -193,24 +245,31 @@ const Header = Styled.div`
     margin-top: 6%;
     padding: 0 6%;
 
+    ion-icon {
+        font-size: 2.4rem;
+        margin-left: 2rem;
+        color: white;
+    }
+
     h2 {
         font-family: 'Raleway';
         color: white;
-        font-size: 1.6rem;
+        font-size: 1.4rem;
     }
 
 `;
 
 const Transactions = Styled.div`
-display: flex;
-flex-direction: column;
-justify-content: space-between;
-background-color: white;
-width: 80%;
-min-height: 400px;
-border-radius: 20px;
-
-p {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: white;
+    width: 80%;
+    min-height: 56vh;
+    
+    border-radius: 20px;
+    
+    p {
         font-size: 1.4rem;
         font-family: 'Raleway';
         color: grey;
@@ -218,8 +277,14 @@ p {
         left: 36%;
         top: 200px;
     }
-
 `
+
+const DeleteIcon = Styled.span`
+    font-size: 1.4rem;
+    font-family: 'Raleway';
+    color: #AAAAAAAA;
+    margin: 0 0.8rem;
+`;
 
 export default Home;
 
