@@ -47,12 +47,14 @@ const Home = () => {
     
     const logout = async click => {
         const headers = { Authorization: `Bearer ${ localStorage.getItem("token") }` };
+                
         try {
-            const logout = await axios.post(`${API}/logout`, { userId: localStorage.getItem("id") }, { headers });
+            const logout = await axios.post(`${API}/logout/${localStorage.getItem("id")}`, {}, { headers });
         } catch (error) {
             alert(error.message);
+            return;
         }
-        navigate("/");
+        return navigate("/");
     }
 
     useEffect(async () => {
@@ -92,7 +94,7 @@ const Home = () => {
                         <Transfer key={i}>
                             <div>
                                 <Date>{t.date}</Date>
-                                <span>{t.description}</span>
+                                <Link to={`/changeTransfer/${t._id}/${t.type}`} ><span>{t.description}</span></Link>
                             </div>
                             <div>
                                 <Value color={color} >{t.value}</Value>
@@ -157,6 +159,10 @@ const Transfer = Styled.div`
     justify-content: space-between;
     padding: 0.3rem 0.3rem 0 0.3rem;
 
+    a {
+        text-decoration: none;
+        color: black;
+    }
 
     span {
         font-family: 'Raleway';
