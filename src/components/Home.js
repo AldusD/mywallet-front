@@ -180,7 +180,7 @@ const Footer = Styled.div`
     bottom: 0;
     left: 5%;
     z-index: 1;
-    margin-top: 15%;
+    margin-top: 25vh;
 
     div {
         display: flex;
