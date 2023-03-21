@@ -18,7 +18,7 @@ const GlobalStyle = createGlobalStyle`
 
 const App = () => {
 
-    const API = process.env.API || 'http://localhost:5000';
+    const API = process.env.REACT_APP_API || 'http://localhost:5000';
     let transfers = new Array;
     const [operation, setOperation] = useState('');
 
