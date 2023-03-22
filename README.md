@@ -1,3 +1,40 @@
+# mywallet-front
+
+[Leia esta página em português](https://github.com/AldusD/mywallet-back/blob/main/README-pt.md)
+
+## SPA Interface for MyWallet app created using *Create React App* 
+
+*MyWallet is mobile responsive only*
+
+*[App Deploy](https://mywalletfinances.vercel.app)* |
+*[back-end repository](https://github.com/AldusD/mywallet-back)*
+
+As one of the weekly projects from Driven Education's Full Stack Web Development Bootcamp, MyWallet was meant to reinforce the following learnt knowledge:
+- Registering users and saving password with criptography
+- Manage users access with sessions and access tokens
+- CRUD with MongoDb 
+- Separate responsabilities in specific files: Routers, middlewares and controllers 
+- Creation of single page application using React Framework
+
+#### How To Start MyWallet
+- 1 - Clone both front-end and back-end repositories
+- 2 - Install all production dependencies using 'npm install'
+- 3 - If wanted, fill the .env files to specify where to run the API and how front-end app can find it 
+- 4 - Run on root directory 'node app.js' on back-end project
+- 5 - Run on root directory 'npm start' on front-end project
+
+#### Explaining the recent new branch
+- Feat/finishing-project branch was meant to complete project intentions that at the time I struggled to complete in time   
+- The upgrades brought by feat/finishing-project branch respected the tecnologies and tools limitations I had at the time
+
+#### Acknowledged mistakes and limitations:
+- Buttons on home will, in some devices will block balance text  
+- API calls are exposed in components file
+- Not using hooks 
+
+
+This app is a project from Driven Education's Full Stack Web Development Bootcamp to 
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
