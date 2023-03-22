@@ -1,6 +1,6 @@
 # mywallet-front
 
-[Leia esta página em português](https://github.com/AldusD/mywallet-back/blob/main/README-pt.md)
+[Leia esta página em português](https://github.com/AldusD/mywallet-front/blob/main/README-pt.md)
 
 ## SPA Interface for MyWallet app created using *Create React App* 
 
