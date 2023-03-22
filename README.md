@@ -32,9 +32,6 @@ As one of the weekly projects from Driven Education's Full Stack Web Development
 - API calls are exposed in components file
 - Not using hooks 
 
-
-This app is a project from Driven Education's Full Stack Web Development Bootcamp to 
-
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
